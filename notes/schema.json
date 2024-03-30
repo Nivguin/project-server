@@ -1,0 +1,12 @@
+{
+    "project":{
+        "name":"string",
+        "author":"string",
+        "instructions":"string",
+        "notes":"string",
+        "date":"string",
+        "public":"boolean",
+        "file":"string/path",
+        "img":"string/link"
+    }
+}
