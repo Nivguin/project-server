@@ -87,6 +87,7 @@
             border: #3E5766 3px solid;
             border-radius: 10px;
             color:white;
+            margin-bottom: 1vmin;
         }
 
         a{
@@ -163,6 +164,9 @@
         
             let codeEl = document.querySelector("#code")
             let code = await fetch("./code")
+            code = await code.text()
+            console.log(code)
+            codeEl.textContent = code
 
             document.querySelector("#verifyButton").addEventListener("click",async()=>{
                 createNotification("Authenticating...",1000)

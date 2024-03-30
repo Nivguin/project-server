@@ -24,7 +24,7 @@ exports.express = async(port)=>{
             res.send("Go fuck yourself and stop fucking with my server, thanks.")
             return
         }
-        console.log(ip+" : "+req.path+" : "+req.headers.origin)
+        console.log(ip+" : "+new Date()+" : "+req.url+" : "+req.headers.origin)
         next()
     })
 
@@ -67,6 +67,7 @@ exports.express = async(port)=>{
     app.get('/', (req, res) => {
       res.send('Hello World!')
     })
+
     app.get('/project',(req,res)=>{
         try{
             let project = projects.projects[parseFloat(req.query.id)-1]
@@ -93,8 +94,18 @@ exports.express = async(port)=>{
     const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 
     app.get("/code",(req,res)=>{
+        let sessionId = genRanHex(32)
+        while(sessions[sessionId]){
+            sessionId = genRanHex(32)
+        }
+        sessions[sessionId] = {}
+        let code = genRanHex(6)
+        while(Object.values(sessions).find(e=>e.code==code&&typeof(e.username)=="undefined")){
+            code = genRanHex(8)
+        }
+        sessions[sessionId].code = code
         
-        res.send()
+        res.send(code)
     })
 
     
