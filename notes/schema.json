@@ -2,9 +2,8 @@
     "project":{
         "name":"string",
         "author":"string",
-        "instructions":"string",
-        "notes":"string",
-        "date":"string",
+        "description":"description",
+        "date":"epoch number",
         "public":"boolean",
         "file":"string/path",
         "img":"string/link"

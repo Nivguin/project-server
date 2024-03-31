@@ -88,7 +88,7 @@
           npProjectContainer.appendChild(projectEl)
       }
 
-      var data = await fetch("https://nivguin.feds.contact/projects")
+      var data = await fetch("https://nivguin.feds.contact/api/projects")
       data = await data.json()
       data.forEach((e)=>{
         addProject("https://studio.penguinmod.com/?project_url="+encodeURIComponent("https://nivguin.feds.contact/projectFile/"+e.file),e.name,e.author)

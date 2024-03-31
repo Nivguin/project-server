@@ -25,6 +25,7 @@
         }
         .notification{
             border: #0f3b4b 3px solid;
+            background-color: rgb(0, 0, 0,0.8);
             border-radius: 10px;
             color:white;
             padding:1vmin;
@@ -117,6 +118,7 @@
             margin-top: 1vmin;
 
             transition: background-color 0.2s;
+            font-size: 1.5vmin;
         }
         button:hover{
             cursor:pointer;
@@ -127,6 +129,24 @@
             background-color: #528699;
         }
 
+        #name{
+            width:99%;
+        }
+        #description{
+            width: 99%;
+            height: 20vh;
+            resize: none;
+        }
+
+        #copyButton{
+            width:2vmin;
+            user-select: none;
+            transition:0.2s width ease-in-out;
+        }
+        #copyButton:hover{
+            cursor:pointer;
+            width:2.1vmin
+        }
     </style>
 </head>
 <body>
@@ -138,13 +158,34 @@
         <hr>
         <div class="section">
             <h3>1. Authenticate with your Scratch account</h3>
-            <span>Comment <span id="code">Please wait for code to load...</span> <a href="https://scratch.mit.edu/projects/992340601/">on this project</a>, then click the button below.</span>
+            <span>Comment <span id="code">Please wait for code to load...</span> <a id="verifyProject">on this project</a>, then click the button below.</span>
             <br>
             <button id="verifyButton">Authenticate</button>
         </div>
         <div class="section">
             <h3>2. Upload project file</h3>
+            <span>5 MB file limit</span>
+            <br>
+            <button id="upload">Upload project file</button>
+            <span id="selected">No file selected</span>
         </div>
+        <div class="section">
+            <h3>3. Make a description of the project</h3>
+            <input type="text" id="name" placeholder="Name of the project">
+            <br>
+            <textarea id="description" placeholder="Description of the project"></textarea>
+        </div>
+        <div class="section">
+            <h3>4. Hit the share button</h3>
+            <span>Remember that moderators will review your project before it is made public.</span>
+            <br>
+            <button id="share">Share</button>
+        </div>
+        <div class="section">
+            <h3>5. Check out your project</h3>
+            <span>Click <a id="link" href="">here</a> to view your project once you have shared it.</span>
+        </div>
+
     </div>
 
     <script>
@@ -161,16 +202,80 @@
                     },1000)
                 },time)
             }
+            document.getElementById("verifyProject").addEventListener("click",async()=>{
+                createNotification("Opening Scratch project...",2000)
+                window.open("https://scratch.mit.edu/projects/992340601/")
+            })
         
             let codeEl = document.querySelector("#code")
-            let code = await fetch("./code")
-            code = await code.text()
+            let code = await fetch("./api/code")
+            code = await code.json()
             console.log(code)
-            codeEl.textContent = code
+            codeEl.textContent = code.code
+            codeEl.innerHTML+=`<img src="./images/copy.svg" id="copyButton">`
+            document.getElementById("copyButton").addEventListener("click",async()=>{
+                navigator.clipboard.writeText(code.code)
+                createNotification("Copied code to clipboard!",1000)
+            })
 
             document.querySelector("#verifyButton").addEventListener("click",async()=>{
                 createNotification("Authenticating...",1000)
+                let auth = await fetch("./api/auth?id="+encodeURIComponent(code.id))
+                auth = await auth.json()
+                console.log(auth)
+
+                createNotification(auth.message,2000)
+                if(auth.error==true){
+                    return;
+                }
             })
+
+            let uploadEl = document.createElement("input")
+            uploadEl.type="file"
+            uploadEl.accept = ".pmp,.pm,sb3"
+            document.getElementById("upload").addEventListener("click",async()=>{
+                uploadEl.click()
+            })
+
+            var fileData;
+            uploadEl.addEventListener("change",async()=>{
+                const fr = new FileReader();
+                let file = uploadEl.files[0]
+                document.getElementById("selected").textContent = file.name
+                fr.readAsDataURL(file);
+                fr.addEventListener("load",async()=>{
+                    fileData = fr.result
+                    console.log(fileData)
+                })
+            })
+
+            document.getElementById("share").addEventListener("click",async()=>{
+                createNotification("Sharing...",2000)
+                let share = await fetch("./api/share",{
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify({
+                        id:code.id,
+                        name:document.getElementById("name").value,
+                        description:document.getElementById("description").value,
+                        file:fileData
+                    })
+                })
+                if(share.status!=200){
+                    createNotification("Failed to share project.",2000)
+                }
+
+                let shareJson = await share.json()
+                console.log(shareJson)
+                createNotification(shareJson.message,2000)
+                if(shareJson.error!=true){
+                    document.getElementById("link").href = "https://studio.penguinmod.com/?project_url="+encodeURIComponent("https://nivguin.feds.contact/projectFile/"+shareJson.file)
+                }
+            })
+
+
         
         })()
     </script>
