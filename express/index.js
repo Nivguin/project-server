@@ -39,6 +39,8 @@ exports.express = async(port)=>{
         next()
     })
 
+    app.use("/",express.static(path.resolve("./express/public/realPublicBcImDumb/")))
+
     var imageRegex = /^\/images\/(\w+\.(svg|png|jpg|jpeg|webm)$)/
     app.use((req,res,next)=>{
         try{
@@ -112,12 +114,13 @@ exports.express = async(port)=>{
     })
 
     app.get('/api/projects',(req,res)=>{
-        res.json(projects.projects.filter(e=>e.public==true))
+        res.json(projects.projects/*.filter(e=>e.public==true)*/)
     })
 
     app.get("/uploadPage",(req,res)=>{
         res.sendFile(path.resolve("./express/public/upload.html"))
     })
+    
     app.get("/404",(req,res)=>{
         res.sendFile(path.resolve("./express/public/404.html"))
     })
@@ -265,7 +268,8 @@ exports.express = async(port)=>{
                 "date":Date.now(),
                 "public":false,
                 "file":projectFileId+".pmp",
-                "img":"https://http.cat/503"
+                "img":"https://http.cat/503",
+                "featured":false
             })
 
             res.status(200)

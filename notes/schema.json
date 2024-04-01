@@ -6,6 +6,7 @@
         "date":"epoch number",
         "public":"boolean",
         "file":"string/path",
-        "img":"string/link"
+        "img":"string/link",
+        "featured":"boolean"
     }
 }
