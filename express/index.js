@@ -9,6 +9,13 @@ function tryCreateDir(dir){
     }
 }
 exports.express = async(port)=>{
+    var admins = ["unluckycrafter","minecrafter_700"]
+    var logText = ""
+    function log(text){
+        console.log(text)
+        logText+=text+"\n"
+    }
+
     const fs = require("fs")
     const path = require("path")
     var bodyParser = require('body-parser')
@@ -35,7 +42,7 @@ exports.express = async(port)=>{
             res.send("Go fuck yourself and stop fucking with my server, thanks.")
             return
         }
-        console.log(ip+" : "+new Date()+" : "+req.url+" : "+req.headers.origin)
+        log(ip+" : "+new Date()+" : "+req.url+" : "+req.headers.origin)
         next()
     })
 
@@ -67,7 +74,7 @@ exports.express = async(port)=>{
     }
     setInterval(()=>{
         setData()
-        // console.log(projects)
+        // log(projects)
     },3000)
     getData()
     
@@ -75,11 +82,11 @@ exports.express = async(port)=>{
         if(req.path.startsWith("/projectFile/")){
             try{
                 let file = /(^(\w+)\.(pm)p?$)/.exec(req.path.replace("/projectFile/","").replaceAll("/",""))[0]
-                // console.log(file)
+                // log(file)
                 if(!fs.existsSync("./data/projects/"+file)){
                     throw new Error("Project file: '"+file+"' doesn't exist.")
                 }
-                // console.log("E")
+                // log("E")
                 let fileData = fs.readFileSync(path.resolve("./data/projects/"+file))
                 res.setHeader('Content-Type', 'application/zip');
                 res.send(fileData)
@@ -120,7 +127,7 @@ exports.express = async(port)=>{
     app.get("/uploadPage",(req,res)=>{
         res.sendFile(path.resolve("./express/public/upload.html"))
     })
-    
+
     app.get("/404",(req,res)=>{
         res.sendFile(path.resolve("./express/public/404.html"))
     })
@@ -190,7 +197,7 @@ exports.express = async(port)=>{
     }
 
     function flag(ip,url,reason){
-        console.log(`IP: '${ip} flagged on url '${url}' for reason '${reason}'`)
+        log(`IP: '${ip} flagged on url '${url}' for reason '${reason}'`)
     }
 
     function _decodeBase64ToUtf8(b64string) {
@@ -206,16 +213,28 @@ exports.express = async(port)=>{
         return buffer;
     }
 
+
+    app.get("/api/log",(req,res)=>{
+        try{
+            if(admins.includes(sessions[req.query.id].username)){
+                res.send(logText)
+            }
+            return
+        }catch(err){
+            console.warn(err)
+        }
+    })
+
     var uploadLimit = {"ip":1234}
     var jsonParser = bodyParser.json()
     app.post("/api/share",jsonParser,(req,res)=>{
         var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
         if(typeof(uploadLimit[ip])=="undefined"){
             uploadLimit[ip] = 0
-            console.log(uploadLimit)
+            log(uploadLimit)
         }
         if(uploadLimit[ip]+minToMS(10)>=Date.now()){
-            console.log(ip+" flagged for uploading projects to fast! ("+uploadLimit[ip]+minToMS(10)-Date.now()+" ms left.)")
+            log(ip+" flagged for uploading projects to fast! ("+uploadLimit[ip]+minToMS(10)-Date.now()+" ms left.)")
             res.json({error:true,message:"You are sharing projects from your IP to fast! Please wait at least 10 minutes between uploads!"})
         }
         try{
@@ -295,6 +314,6 @@ exports.express = async(port)=>{
       });
 
     app.listen(port, () => {
-      console.log(`Example app listening on port ${port}`)
+      log(`Example app listening on port ${port}`)
     })
 }

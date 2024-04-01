@@ -5,6 +5,7 @@
 body{
     background-color: #3E5766;
     overflow:hidden;
+    overflow-y: auto;
 }
 #notifications{
     position: fixed;
@@ -99,4 +100,11 @@ button:hover{
 button:active{
     cursor:pointer;
     background-color: #528699;
+}
+
+
+.code{
+    background-color:black;
+    color:white;
+    padding: 0.5vmin;
 }

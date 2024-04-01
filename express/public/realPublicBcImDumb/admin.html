@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nivguin - Home Page</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        #copyButton{
+            width:2vmin;
+            user-select: none;
+            transition:0.2s width ease-in-out;
+        }
+        #copyButton:hover{
+            cursor:pointer;
+            width:2.1vmin
+        }
+    </style>
+</head>
+<body>
+    <div id="notifications">
+
+    </div>
+
+    <div class="container">
+        <h1 style="text-align:center">Project Admin Dashboard</h1>
+        <h2>Authenticate</h2>
+        <span><span id="code" class="code">Please wait for code to load...</span> <a id="verifyProject">project</a></span>
+        <br>
+        <button id="verifyButton">Authenticate</button>
+
+        <div id="hide">
+            <h2>Console Log</h2>
+            <textarea class="code" style="width:100%;height:10vmin;" id="log">ham and cheese</textarea>
+            <br>
+            <button id="refreshLog">Refresh</button>
+            <h2>Project JSON Modifier</h2>
+            <textarea class="code" style="width:100%;height:10vmin;" id="json">ham and cheese</textarea>
+            <br>
+            <button id="refreshJson">Refresh</button>
+            <button id="modifyJson">Update</button>
+        </div>
+    </div>
+
+    <script src="./notify.js"></script>
+    <script src="./admin.js"></script>
+</body>
+</html>
