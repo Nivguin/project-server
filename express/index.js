@@ -187,6 +187,7 @@ exports.express = async(port)=>{
             console.warn(err)
             res.status(500)
             res.json({error:true,message:"Something went wrong"})
+            return
         }
         res.status(498)
         res.json({error:true,message:"Failed to find authorization code in comments."})

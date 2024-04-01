@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonygoose</title>
+</head>
+<body>
+    <img src="anony.png">
+    <h1>Worship the Anonygoose; become the Anonygoose</h1>
+
+    <style>
+        *{
+            margin:0;
+        }
+        img{
+            height:100vh;
+            display:block;
+            margin:auto;
+            border-radius:100vh;
+            border:1vmin black solid;
+            animation: rotate 5s linear infinite;
+        }
+        h1{
+            z-index:100;
+            color:rgb(255, 255, 255);
+
+            position: fixed;
+
+            left: 50vw;
+            top: 15vh;
+            transform: translate(-50%, -50%);
+            width:100vw;
+            
+            font-size:10vmin;
+            text-align:center;
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body{
+            background-image:url(anony.png);
+        }
+        @keyframes rotate{
+            from{
+                transform:rotate(0deg);
+            }
+            to{
+                transform:rotate(360deg);
+            }
+        }
+    </style>
+</body>
+</html>

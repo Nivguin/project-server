@@ -12,7 +12,7 @@
           margin-bottom:1vh;
       `
       let npHeader = document.createElement("strong")
-      npHeader.textContent = "Nivguin Projects"
+      npHeader.textContent = "Anonygoose Projects"
       np.appendChild(npHeader)
 
       let npBreak = document.createElement("hr")
